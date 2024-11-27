@@ -3,11 +3,3 @@ Copyright 2016-2024 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
-
-This product includes software from Dremio (Apache 2.0)
-  * Copyright (C) 2017-2018 Dremio Corporation
-  * https://github.com/dremio/dremio-oss
-
-This product includes software from Google Guava (Apache 2.0)
-  * Copyright (C) 2007 The Guava Authors
-  * https://github.com/google/guava

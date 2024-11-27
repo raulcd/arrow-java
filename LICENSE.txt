@@ -207,3 +207,17 @@ java/vector/src/main/java/org/apache/arrow/vector/util/IntObjectMap.java
 
 These file are derived from code from Netty, which is made available under the
 Apache License 2.0.
+
+--------------------------------------------------------------------------------
+
+This product includes software from Dremio, which is made available under the
+Apache License 2.0.
+  * Copyright (C) 2017-2018 Dremio Corporation
+  * https://github.com/dremio/dremio-oss
+
+--------------------------------------------------------------------------------
+
+This product includes software from Google Guava, which is made available under the
+Apache License 2.0.
+  * Copyright (C) 2007 The Guava Authors
+  * https://github.com/google/guava
