@@ -210,12 +210,6 @@ Apache License 2.0.
 
 --------------------------------------------------------------------------------
 
-This product includes software from Dremio, which is made available under the
-Apache License 2.0.
-  * Copyright (C) 2017-2018 Dremio Corporation
-  * https://github.com/dremio/dremio-oss
-
---------------------------------------------------------------------------------
 memory/memory-core/src/main/java/org/apache/arrow/util/Preconditions.java
 
 This product includes software from Google Guava, which is made available under the
