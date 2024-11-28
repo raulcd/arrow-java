@@ -202,8 +202,8 @@
    limitations under the License.
 
 --------------------------------------------------------------------------------
-java/vector/src/main/java/org/apache/arrow/vector/util/IntObjectHashMap.java
-java/vector/src/main/java/org/apache/arrow/vector/util/IntObjectMap.java
+vector/src/main/java/org/apache/arrow/vector/util/IntObjectHashMap.java
+vector/src/main/java/org/apache/arrow/vector/util/IntObjectMap.java
 
 These file are derived from code from Netty, which is made available under the
 Apache License 2.0.
@@ -216,6 +216,7 @@ Apache License 2.0.
   * https://github.com/dremio/dremio-oss
 
 --------------------------------------------------------------------------------
+memory/memory-core/src/main/java/org/apache/arrow/util/Preconditions.java
 
 This product includes software from Google Guava, which is made available under the
 Apache License 2.0.
