@@ -168,7 +168,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - { runs_on: macos-13, arch: "x86_64"}
+          - { runs_on: macos-15-intel, arch: "x86_64"}
           - { runs_on: macos-14, arch: "aarch_64" }
     env:
       MACOSX_DEPLOYMENT_TARGET: "14.0"
@@ -222,7 +222,7 @@ jobs:
           brew uninstall llvm || :
 
           # We can remove this when we drop support for
-          # macos-13. because macos-14 or later uses /opt/homebrew/
+          # macos-15-intel. because macos-14 or later with arm64 uses /opt/homebrew/
           # not /usr/local/.
           #
           # Ensure updating python@XXX with the "--overwrite" option.
@@ -298,7 +298,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - runs_on: windows-2019
+          - runs_on: windows-2022
             arch: "x86_64"
     steps:
       - name: Download source archive
@@ -309,13 +309,19 @@ jobs:
         shell: bash
         run: |
           tar -xf apache-arrow-java-*.tar.gz --strip-components=1
-      - name: Download the latest Apache Arrow C++
-        if: github.event_name != 'schedule'
-        shell: bash
-        run: |
-          ci/scripts/download_cpp.sh
+      # We always use the main branch for apache/arrow for now.
+      # Because we want to use
+      # https://github.com/apache/arrow/pull/47749 in
+      # apache/arrow-java. We can revert this workaround once Apache
+      # Arrow 22.0.0 that includes the change released.
+      #
+      # - name: Download the latest Apache Arrow C++
+      #   if: github.event_name != 'schedule'
+      #   shell: bash
+      #   run: |
+      #     ci/scripts/download_cpp.sh
       - name: Checkout Apache Arrow C++
-        if: github.event_name == 'schedule'
+        # if: github.event_name == 'schedule'
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: apache/arrow
@@ -354,7 +360,7 @@ jobs:
       - name: Build
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           REM For ORC
           set TZDIR=/c/msys64/usr/share/zoneinfo
           bash -c "ci/scripts/jni_windows_build.sh . arrow build jni"
