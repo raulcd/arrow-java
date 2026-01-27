@@ -21,6 +21,8 @@ import static org.apache.arrow.driver.jdbc.utils.ArrowFlightConnectionConfigImpl
 import io.netty.util.concurrent.DefaultThreadFactory;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,6 +44,8 @@ public final class ArrowFlightConnection extends AvaticaConnection {
   private final ArrowFlightSqlClientHandler clientHandler;
   private final ArrowFlightConnectionConfigImpl config;
   private ExecutorService executorService;
+  private int metadataResultSetCount;
+  private Map<Integer, ArrowFlightJdbcFlightStreamResultSet> metadataResultSetMap = new HashMap<>();
 
   /**
    * Creates a new {@link ArrowFlightConnection}.
@@ -66,6 +70,7 @@ public final class ArrowFlightConnection extends AvaticaConnection {
     this.config = Preconditions.checkNotNull(config, "Config cannot be null.");
     this.allocator = Preconditions.checkNotNull(allocator, "Allocator cannot be null.");
     this.clientHandler = Preconditions.checkNotNull(clientHandler, "Handler cannot be null.");
+    this.metadataResultSetCount = 0;
   }
 
   /**
@@ -173,6 +178,31 @@ public final class ArrowFlightConnection extends AvaticaConnection {
             : executorService;
   }
 
+  /**
+   * Registers a new metadata ResultSet and assigns it a unique ID. Metadata ResultSets are those
+   * created without an associated Statement.
+   *
+   * @param resultSet the ResultSet to register
+   * @return the assigned ID
+   */
+  int getNewMetadataResultSetId(ArrowFlightJdbcFlightStreamResultSet resultSet) {
+    metadataResultSetMap.put(metadataResultSetCount, resultSet);
+    return metadataResultSetCount++;
+  }
+
+  /**
+   * Unregisters a metadata ResultSet when it is closed. This method is called by metadata
+   * ResultSets during their close operation to remove themselves from the tracking map.
+   *
+   * @param id the ID of the ResultSet to unregister, or null if not a metadata ResultSet
+   */
+  void onResultSetClose(Integer id) {
+    if (id == null) {
+      return;
+    }
+    metadataResultSetMap.remove(id);
+  }
+
   @Override
   public Properties getClientInfo() {
     final Properties copy = new Properties();
@@ -190,7 +220,9 @@ public final class ArrowFlightConnection extends AvaticaConnection {
     } catch (final Exception e) {
       topLevelException = e;
     }
+    // copies of the collections are used to avoid concurrent modification problems
     ArrayList<AutoCloseable> closeables = new ArrayList<>(statementMap.values());
+    closeables.addAll(new ArrayList<>(metadataResultSetMap.values()));
     closeables.add(clientHandler);
     closeables.addAll(allocator.getChildAllocators());
     closeables.add(allocator);
