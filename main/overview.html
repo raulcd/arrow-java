@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installing Java Modules" href="install.html" /><link rel="prev" title="Quick Start Guide" href="quickstartguide.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>High-Level Overview - arrow-java 19.0.0-SNAPSHOT documentation</title>
+        <title>High-Level Overview - arrow-java 19.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">arrow-java 19.0.0-SNAPSHOT documentation</div></a>
+      <a href="index.html"><div class="brand">arrow-java 19.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">arrow-java 19.0.0-SNAPSHOT documentation</span>
+  <span class="sidebar-brand-text">arrow-java 19.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -302,55 +302,59 @@ but some modules are JNI bindings to the C++ library.</p>
 <td><p>An off-heap reference implementation for Arrow columnar data format.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-odd"><td><p>arrow-tools</p></td>
+<tr class="row-odd"><td><p>arrow-vector-codegen</p></td>
+<td><p>Template files for Arrow datatypes suitable for code generation.</p></td>
+<td><p>Native</p></td>
+</tr>
+<tr class="row-even"><td><p>arrow-tools</p></td>
 <td><p>Java applications for working with Arrow ValueVectors.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-even"><td><p>arrow-jdbc</p></td>
+<tr class="row-odd"><td><p>arrow-jdbc</p></td>
 <td><p>(Experimental) A library for converting JDBC data to Arrow data.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-odd"><td><p>flight-core</p></td>
+<tr class="row-even"><td><p>flight-core</p></td>
 <td><p>An RPC mechanism for transferring ValueVectors.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-even"><td><p>flight-sql</p></td>
+<tr class="row-odd"><td><p>flight-sql</p></td>
 <td><p>Contains utility classes to expose Flight SQL semantics for clients and servers over Arrow Flight.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-odd"><td><p>flight-integration-tests</p></td>
+<tr class="row-even"><td><p>flight-integration-tests</p></td>
 <td><p>Integration tests for Flight RPC.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-even"><td><p>arrow-performance</p></td>
+<tr class="row-odd"><td><p>arrow-performance</p></td>
 <td><p>JMH benchmarks for the Arrow libraries.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-odd"><td><p>arrow-algorithm</p></td>
+<tr class="row-even"><td><p>arrow-algorithm</p></td>
 <td><p>(Experimental) A collection of algorithms for working with ValueVectors.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-even"><td><p>arrow-avro</p></td>
+<tr class="row-odd"><td><p>arrow-avro</p></td>
 <td><p>(Experimental) A library for converting Avro data to Arrow data.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-odd"><td><p>arrow-compression</p></td>
+<tr class="row-even"><td><p>arrow-compression</p></td>
 <td><p>(Experimental) A library for working with compression/decompression of Arrow data.</p></td>
 <td><p>Native</p></td>
 </tr>
-<tr class="row-even"><td><p>arrow-c-data</p></td>
+<tr class="row-odd"><td><p>arrow-c-data</p></td>
 <td><p>Java implementation of <a class="reference external" href="https://arrow.apache.org/docs/format/CDataInterface.html">C Data Interface</a></p></td>
 <td><p>JNI</p></td>
 </tr>
-<tr class="row-odd"><td><p>arrow-orc</p></td>
+<tr class="row-even"><td><p>arrow-orc</p></td>
 <td><p>(Experimental) A JNI wrapper for the C++ ORC reader implementation.</p></td>
 <td><p>JNI</p></td>
 </tr>
-<tr class="row-even"><td><p>arrow-gandiva</p></td>
+<tr class="row-odd"><td><p>arrow-gandiva</p></td>
 <td><p>Java wrappers around the native Gandiva SQL expression compiler.</p></td>
 <td><p>JNI</p></td>
 </tr>
-<tr class="row-odd"><td><p>arrow-dataset</p></td>
+<tr class="row-even"><td><p>arrow-dataset</p></td>
 <td><p>Java bindings to the Arrow Datasets library.</p></td>
 <td><p>JNI</p></td>
 </tr>
@@ -409,7 +413,7 @@ but some modules are JNI bindings to the C++ library.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=32551d9a"></script>
+</div><script src="_static/documentation_options.js?v=486c5496"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
