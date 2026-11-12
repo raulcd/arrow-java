@@ -271,27 +271,34 @@
 <section id="java-compatibility">
 <h2>Java Compatibility<a class="headerlink" href="#java-compatibility" title="Link to this heading">¶</a></h2>
 <p>Java modules are compatible with JDK 17 and above. Currently, JDK versions
-17, 21, and latest are tested in CI.</p>
-<p>Note that some JDK internals must be exposed by
-adding <code class="docutils literal notranslate"><span class="pre">--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED</span></code> to the <code class="docutils literal notranslate"><span class="pre">java</span></code> command:</p>
+17, 21, and 25 are tested in CI.</p>
+<p>Note that some JDK internals must be exposed by adding these flags to the <code class="docutils literal notranslate"><span class="pre">java</span></code> command:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED</span></code> (always required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--enable-native-access=io.netty.common</span></code> (Java 25+, when using <code class="docutils literal notranslate"><span class="pre">arrow-memory-netty</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--sun-misc-unsafe-memory-access=allow</span></code> (Java 25+; not stricly necessary, but suppresses certain warnings)</p></li>
+</ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Directly on the command line</span>
 $<span class="w"> </span>java<span class="w"> </span>--add-opens<span class="o">=</span>java.base/java.nio<span class="o">=</span>org.apache.arrow.memory.core,ALL-UNNAMED<span class="w"> </span>-jar<span class="w"> </span>...
 <span class="c1"># Indirectly via environment variables</span>
-$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED&quot;</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
+$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">"--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
 </pre></div>
 </div>
-<p>Otherwise, you may see errors like <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">java.base</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">&quot;opens</span>
-<span class="pre">java.nio&quot;</span> <span class="pre">to</span> <span class="pre">unnamed</span> <span class="pre">module</span></code> or <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">java.base</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">&quot;opens</span>
-<span class="pre">java.nio&quot;</span> <span class="pre">to</span> <span class="pre">org.apache.arrow.memory.core</span></code></p>
+<p>Otherwise, you may see errors and/or warnings like these:
+- <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">java.base</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">&quot;opens</span> <span class="pre">java.nio&quot;</span> <span class="pre">to</span> <span class="pre">unnamed</span> <span class="pre">module</span></code>
+- <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">java.base</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">&quot;opens</span> <span class="pre">java.nio&quot;</span> <span class="pre">to</span> <span class="pre">org.apache.arrow.memory.core</span></code>
+- <code class="docutils literal notranslate"><span class="pre">Native</span> <span class="pre">access</span> <span class="pre">(restricted</span> <span class="pre">methods)</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">enabled</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">io.netty.common</span> <span class="pre">module.</span></code>
+- <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">terminally</span> <span class="pre">deprecated</span> <span class="pre">method</span> <span class="pre">in</span> <span class="pre">sun.misc.Unsafe</span> <span class="pre">has</span> <span class="pre">been</span> <span class="pre">called</span></code></p>
 <p>Note that the command has changed from Arrow 15 and earlier. If you are still using the flags from that version
 (<code class="docutils literal notranslate"><span class="pre">--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED</span></code>) you will see the
 <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">java.base</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">&quot;opens</span> <span class="pre">java.nio&quot;</span> <span class="pre">to</span> <span class="pre">org.apache.arrow.memory.core</span></code> error.</p>
+<p>For more information on these flags, see the <a class="reference external" href="https://netty.io/wiki/java-24-and-sun.misc.unsafe.html">Netty documentation</a>.</p>
 <p>If you are using flight-core or dependent modules, you will need to mark that flight-core can read unnamed modules.
 Modifying the command above for Flight:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Directly on the command line</span>
 $<span class="w"> </span>java<span class="w"> </span>--add-opens<span class="o">=</span>java.base/java.nio<span class="o">=</span>org.apache.arrow.memory.core,ALL-UNNAMED<span class="w"> </span>-jar<span class="w"> </span>...
 <span class="c1"># Indirectly via environment variables</span>
-$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--add-reads=org.apache.arrow.flight.core=ALL-UNNAMED --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED&quot;</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
+$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">"--add-reads=org.apache.arrow.flight.core=ALL-UNNAMED --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
 </pre></div>
 </div>
 <p>Otherwise, you may see errors like <code class="docutils literal notranslate"><span class="pre">java.lang.IllegalAccessError:</span> <span class="pre">superclass</span> <span class="pre">access</span> <span class="pre">check</span> <span class="pre">failed:</span> <span class="pre">class</span>
@@ -303,7 +310,7 @@ Modifying the command above for arrow-memory:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Directly on the command line</span>
 $<span class="w"> </span>java<span class="w"> </span>--add-opens<span class="o">=</span>java.base/java.nio<span class="o">=</span>org.apache.arrow.memory.core,ALL-UNNAMED<span class="w"> </span>-jar<span class="w"> </span>...
 <span class="c1"># Indirectly via environment variables</span>
-$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--add-opens=java.base/java.nio=org.apache.arrow.dataset,org.apache.arrow.memory.core,ALL-UNNAMED&quot;</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
+$<span class="w"> </span>env<span class="w"> </span><span class="nv">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">"--add-opens=java.base/java.nio=org.apache.arrow.dataset,org.apache.arrow.memory.core,ALL-UNNAMED"</span><span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>...
 </pre></div>
 </div>
 <p>Otherwise you may see errors such as <code class="docutils literal notranslate"><span class="pre">java.lang.RuntimeException:</span> <span class="pre">java.lang.reflect.InaccessibleObjectException:</span>
@@ -317,10 +324,10 @@ be added to Surefire as well</span></a>.</p>
 <p>By default, Maven will download from the central repository: <a class="reference external" href="https://repo.maven.apache.org/maven2/org/apache/arrow/">https://repo.maven.apache.org/maven2/org/apache/arrow/</a></p>
 <p>Configure your pom.xml with the Java modules needed, for example:
 arrow-vector, and arrow-memory-netty.</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
-<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span>
+<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
 <span class="w">    </span><span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.example<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>demo<span class="nt">&lt;/artifactId&gt;</span>
@@ -346,10 +353,10 @@ arrow-vector, and arrow-memory-netty.</p>
 <p>A bill of materials (BOM) module has been provided to simplify adding
 Arrow modules. This eliminates the need to specify the version for
 every module. An alternative to the above would be:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
-<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span>
+<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
 <span class="w">    </span><span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.example<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>demo<span class="nt">&lt;/artifactId&gt;</span>
@@ -385,10 +392,10 @@ every module. An alternative to the above would be:</p>
 plugin. This plugin generates useful platform-dependent properties
 such as <code class="docutils literal notranslate"><span class="pre">os.detected.name</span></code> and <code class="docutils literal notranslate"><span class="pre">os.detected.arch</span></code> needed to resolve
 transitive dependencies of Flight.</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
-<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span>
+<span class="w">         </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="w">         </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
 <span class="w">    </span><span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.example<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>demo<span class="nt">&lt;/artifactId&gt;</span>
@@ -431,7 +438,7 @@ transitive dependencies of Flight.</p>
 </pre></div>
 </div>
 <p>Or they can be added via environment variable, for example when executing your code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--add-opens=java.base/java.nio=ALL-UNNAMED&quot;</span> <span class="n">mvn</span> <span class="n">exec</span><span class="p">:</span><span class="n">java</span> <span class="o">-</span><span class="n">Dexec</span><span class="o">.</span><span class="n">mainClass</span><span class="o">=</span><span class="s2">&quot;YourMainCode&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">JDK_JAVA_OPTIONS</span><span class="o">=</span><span class="s2">"--add-opens=java.base/java.nio=ALL-UNNAMED"</span> <span class="n">mvn</span> <span class="n">exec</span><span class="p">:</span><span class="n">java</span> <span class="o">-</span><span class="n">Dexec</span><span class="o">.</span><span class="n">mainClass</span><span class="o">=</span><span class="s2">"YourMainCode"</span>
 </pre></div>
 </div>
 </section>
